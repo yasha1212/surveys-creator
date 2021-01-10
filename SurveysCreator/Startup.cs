@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace SurveysCreator
 {
@@ -17,7 +18,7 @@ namespace SurveysCreator
             services.AddControllersWithViews();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
             if (env.IsDevelopment())
             {
@@ -26,6 +27,12 @@ namespace SurveysCreator
 
             app.UseRouting();
 
+            app.Use(async (context, next) =>
+            {
+                logger.LogInformation($"{context.Request.Path} request is being processed");
+                await next.Invoke();
+            });
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

@@ -1,11 +1,13 @@
-﻿@{
+﻿@using Utils
+
+@{
     ViewData["Title"] = "About";
 }
 
 <h2>About Page</h2>
 
-<p>
-    Surveys Creator,
-    Aliaksei Shukan,
-    ITechArt, 2021
-</p>
+<p>Surveys Creator. Aliaksei Shukan, ITechArt, 2021</p>
+
+<environment names="Development">
+    <p>@Utils.AppVersionUtil.GetAppVersion()</p>
+</environment>    

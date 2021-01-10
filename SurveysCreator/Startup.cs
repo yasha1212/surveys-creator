@@ -7,14 +7,26 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using SurveysCreator.Data;
 
 namespace SurveysCreator
 {
     public class Startup
     {
+        public IConfiguration AppConfiguration { get; }
+
+        public Startup(IConfiguration configuration)
+        {
+            AppConfiguration = configuration;
+        }
+        
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<DatabaseContext>(options =>
+                options.UseSqlServer(AppConfiguration.GetConnectionString("DefaultConnection")));
             services.AddControllersWithViews();
         }
 

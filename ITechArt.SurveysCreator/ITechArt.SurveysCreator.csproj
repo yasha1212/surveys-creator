@@ -11,7 +11,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ITechArt.DatabaseModels\ITechArt.DatabaseModels.csproj" />
     <ProjectReference Include="..\ITechArt.DatabaseServices\ITechArt.DatabaseServices.csproj" />
-    <ProjectReference Include="..\Utils\ITechArt.Utils.csproj" />
+    <ProjectReference Include="..\ITechArt.Utils\ITechArt.Utils.csproj" />
   </ItemGroup>
 
   <ItemGroup>

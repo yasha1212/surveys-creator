@@ -7,12 +7,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ITechArt.DatabaseModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using SurveysCreator.Data;
 
-namespace SurveysCreator
+namespace ITechArt.SurveysCreator
 {
     public class Startup
     {

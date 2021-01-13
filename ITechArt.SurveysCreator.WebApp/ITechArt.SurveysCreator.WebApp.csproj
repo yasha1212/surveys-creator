@@ -9,9 +9,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ITechArt.DatabaseModels\ITechArt.DatabaseModels.csproj" />
-    <ProjectReference Include="..\ITechArt.DatabaseServices\ITechArt.DatabaseServices.csproj" />
-    <ProjectReference Include="..\ITechArt.Utils\ITechArt.Utils.csproj" />
+    <ProjectReference Include="..\ITechArt.SurveysCreator.DAL\ITechArt.SurveysCreator.DAL.csproj" />
+    <ProjectReference Include="..\ITechArt.SurveysCreator.Foundation\ITechArt.SurveysCreator.Foundation.csproj" />
+    <ProjectReference Include="..\ITechArt.Common\ITechArt.Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>

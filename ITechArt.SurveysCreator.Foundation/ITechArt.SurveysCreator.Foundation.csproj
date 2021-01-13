@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ITechArt.DatabaseModels\ITechArt.DatabaseModels.csproj" />
+    <ProjectReference Include="..\ITechArt.SurveysCreator.DAL\ITechArt.SurveysCreator.DAL.csproj" />
   </ItemGroup>
 
 </Project>

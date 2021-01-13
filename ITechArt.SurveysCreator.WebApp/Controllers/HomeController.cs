@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
-namespace ITechArt.SurveysCreator.Controllers
+namespace ITechArt.SurveysCreator.WebApp.Controllers
 {
     public class HomeController : Controller
     {

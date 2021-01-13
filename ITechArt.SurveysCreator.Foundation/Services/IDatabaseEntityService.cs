@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ITechArt.DatabaseServices
+namespace ITechArt.SurveysCreator.Foundation.Services
 {
     interface IDatabaseEntityService
     {

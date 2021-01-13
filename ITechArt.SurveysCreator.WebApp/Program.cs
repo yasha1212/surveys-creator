@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ITechArt.SurveysCreator
+namespace ITechArt.SurveysCreator.WebApp
 {
     public class Program
     {

@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
-using ITechArt.DatabaseModels.Models;
+using ITechArt.SurveysCreator.DAL.Models;
 
-namespace ITechArt.DatabaseModels
+namespace ITechArt.SurveysCreator.DAL
 {
     public class DatabaseContext : DbContext
     {

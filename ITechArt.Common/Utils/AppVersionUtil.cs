@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Reflection;
 
-namespace ITechArt.Utils
+namespace ITechArt.Common.Utils
 {
     public static class AppVersionUtil
     {

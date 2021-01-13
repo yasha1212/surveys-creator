@@ -1,8 +1,8 @@
-﻿using ITechArt.DatabaseModels;
-using ITechArt.DatabaseModels.Models;
-using System;
+﻿using System;
+using ITechArt.SurveysCreator.DAL;
+using ITechArt.SurveysCreator.DAL.Models;
 
-namespace ITechArt.DatabaseServices
+namespace ITechArt.SurveysCreator.Foundation.Services
 {
     public class UserService : IDatabaseEntityService
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ITechArt.DatabaseModels.Models
+namespace ITechArt.SurveysCreator.DAL.Models
 {
     public class User
     {

@@ -10,8 +10,6 @@ namespace ITechArt.SurveysCreator.DAL
 
         public DatabaseContext(DbContextOptions<DatabaseContext> options)
             : base(options)
-        {
-            Database.EnsureCreated();
-        }
+        { }
     }
 }

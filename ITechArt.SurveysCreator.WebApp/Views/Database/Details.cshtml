@@ -1,0 +1,58 @@
+﻿@model ITechArt.SurveysCreator.DAL.Models.User
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Database - SurveysCreator</title>
+</head>
+<body>
+    <h1>Details</h1>
+
+    <hr />
+    <div>
+        <div>
+            <dl>
+                <dt>
+                    @Html.DisplayNameFor(model => model.FirstName)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.FirstName)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.SecondName)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.SecondName)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Age)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Age)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Login)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Login)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.Email)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Email)
+                </dd>
+            </dl>
+        </div>
+        
+        <div>
+            <a asp-action="Index">Back to list</a>
+        </div>
+    </div>
+</body>
+</html>

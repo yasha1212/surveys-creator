@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ITechArt.SurveysCreator.DAL;
 using ITechArt.SurveysCreator.Foundation.Services;
+using ITechArt.SurveysCreator.WebApp.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -39,6 +40,8 @@ namespace ITechArt.SurveysCreator.WebApp
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseExceptionLogger();
+            
             app.UseRouting();
 
             app.Use(async (context, next) =>

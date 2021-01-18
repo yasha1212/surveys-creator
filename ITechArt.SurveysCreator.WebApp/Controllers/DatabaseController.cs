@@ -23,11 +23,14 @@ namespace ITechArt.SurveysCreator.WebApp.Controllers
         public IActionResult Index()
         {
             _logger.LogInformation("Opening Database/Index page");
+            
             return View(_userService.Get());
         }
 
         public IActionResult Create()
         {
+            _logger.LogInformation("Opening Database/Create page");
+
             var user = new User()
             {
                 Age = 18,
@@ -43,14 +46,7 @@ namespace ITechArt.SurveysCreator.WebApp.Controllers
         [HttpPost]
         public IActionResult Create(User user)
         {
-            try
-            {
-                _userService.Add(user);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogWarning(ex.Message);
-            }
+            _userService.Add(user);
 
             return RedirectToAction("Index");
         }
@@ -77,14 +73,7 @@ namespace ITechArt.SurveysCreator.WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                try
-                {
-                    _userService.Edit(id, user);
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogWarning(ex.Message);
-                }
+                _userService.Edit(id, user);
 
                 return RedirectToAction("Index");
             }
@@ -112,14 +101,7 @@ namespace ITechArt.SurveysCreator.WebApp.Controllers
         [HttpPost]
         public IActionResult Delete(int id)
         {
-            try
-            {
-                _userService.Delete(id);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogWarning(ex.Message);
-            }
+            _userService.Delete(id);
 
             return RedirectToAction("Index");
         }

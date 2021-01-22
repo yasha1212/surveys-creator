@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
@@ -29,6 +30,14 @@ namespace ITechArt.SurveysCreator.WebApp.Middleware
                 _logger.LogWarning(ex.Message);
                 throw;
             }
+        }
+    }
+
+    public static class ExceptionLogExtension
+    {
+        public static IApplicationBuilder UseExceptionLogger(this IApplicationBuilder builder)
+        {
+            return builder.UseMiddleware<ExceptionLogMiddleware>();
         }
     }
 }

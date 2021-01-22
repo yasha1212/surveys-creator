@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ITechArt.SurveysCreator.DAL.Migrations
 {
-    [DbContext(typeof(DatabaseContext))]
+    [DbContext(typeof(SurveysCreatorContext))]
     [Migration("20210117124307_InitialCreate")]
     partial class InitialCreate
     {

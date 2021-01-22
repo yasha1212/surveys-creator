@@ -9,7 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ITechArt.SurveysCreator.DAL;
 using ITechArt.SurveysCreator.Foundation.Services;
-using ITechArt.SurveysCreator.WebApp.Extensions;
+using ITechArt.SurveysCreator.WebApp.Middleware;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -27,8 +27,8 @@ namespace ITechArt.SurveysCreator.WebApp
         
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddTransient<IEntityService, UserService>();
-            services.AddDbContext<DatabaseContext>(options =>
+            services.AddTransient<IUserService, UserService>();
+            services.AddDbContext<SurveysCreatorContext>(options =>
                 options.UseSqlServer(AppConfiguration.GetConnectionString("DefaultConnection")));
             services.AddControllersWithViews();
         }

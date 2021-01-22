@@ -4,11 +4,11 @@ using ITechArt.SurveysCreator.DAL.Models;
 
 namespace ITechArt.SurveysCreator.DAL
 {
-    public class DatabaseContext : DbContext
+    public class SurveysCreatorContext : DbContext
     {
         public DbSet<User> Users { get; set; }
 
-        public DatabaseContext(DbContextOptions<DatabaseContext> options)
+        public SurveysCreatorContext(DbContextOptions<SurveysCreatorContext> options)
             : base(options)
         { }
     }

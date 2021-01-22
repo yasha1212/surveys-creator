@@ -6,11 +6,11 @@ using ITechArt.SurveysCreator.DAL.Models;
 
 namespace ITechArt.SurveysCreator.Foundation.Services
 {
-    public class UserService : IEntityService
+    public class UserService : IUserService
     {
-        private readonly DatabaseContext _context;
+        private readonly SurveysCreatorContext _context;
 
-        public UserService(DatabaseContext context)
+        public UserService(SurveysCreatorContext context)
         {
             _context = context;
         }

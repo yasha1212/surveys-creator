@@ -6,7 +6,7 @@ using ITechArt.SurveysCreator.DAL.Models;
 
 namespace ITechArt.SurveysCreator.Foundation.Services
 {
-    public interface IEntityService
+    public interface IUserService
     {
         User Details(int id);
 

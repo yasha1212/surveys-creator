@@ -9,12 +9,12 @@ using Microsoft.Extensions.Logging;
 
 namespace ITechArt.SurveysCreator.WebApp.Controllers
 {
-    public class DatabaseController : Controller
+    public class UserController : Controller
     {
-        private readonly IEntityService _userService;
-        private readonly ILogger<DatabaseController> _logger;
+        private readonly IUserService _userService;
+        private readonly ILogger<UserController> _logger;
 
-        public DatabaseController(IEntityService service, ILogger<DatabaseController> logger)
+        public UserController(IUserService service, ILogger<UserController> logger)
         {
             _userService = service;
             _logger = logger;
@@ -22,14 +22,14 @@ namespace ITechArt.SurveysCreator.WebApp.Controllers
         
         public IActionResult Index()
         {
-            _logger.LogInformation("Opening Database/Index page");
+            _logger.LogInformation("Opening User/Index page");
             
             return View(_userService.Get());
         }
 
         public IActionResult Create()
         {
-            _logger.LogInformation("Opening Database/Create page");
+            _logger.LogInformation("Opening User/Create page");
 
             var user = new User()
             {
@@ -53,49 +53,53 @@ namespace ITechArt.SurveysCreator.WebApp.Controllers
 
         public IActionResult Edit(int? id)
         {
-            _logger.LogInformation("Opening Database/Edit page");
+            _logger.LogInformation("Opening User/Edit page");
 
-            if (id != null)
+            if (id == null)
             {
-                var user = _userService.Details((int)id);
-
-                if (user != null)
-                {
-                    return View(user);
-                }
+                return RedirectToAction("Index");
             }
 
-            return RedirectToAction("Index");
-        }
+            var user = _userService.Details((int)id);
 
-        [HttpPost]
-        public IActionResult Edit(int id, User user)
-        {
-            if (ModelState.IsValid)
+            if (user == null)
             {
-                _userService.Edit(id, user);
-
                 return RedirectToAction("Index");
             }
 
             return View(user);
         }
 
-        public IActionResult Delete(int? id)
+        [HttpPost]
+        public IActionResult Edit(int id, User user)
         {
-            _logger.LogInformation("Opening Database/Delete page");
-
-            if (id != null)
+            if (!ModelState.IsValid)
             {
-                var user = _userService.Details((int)id);
-
-                if (user != null)
-                {
-                    return View(user);
-                }
+                return View(user);
             }
 
+            _userService.Edit(id, user);
+
             return RedirectToAction("Index");
+        }
+
+        public IActionResult Delete(int? id)
+        {
+            _logger.LogInformation("Opening User/Delete page");
+
+            if (id == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var user = _userService.Details((int)id);
+
+            if (user == null)
+            {
+                return RedirectToAction("Index");
+            }
+            
+            return View(user);
         }
 
         [HttpPost]
@@ -108,19 +112,21 @@ namespace ITechArt.SurveysCreator.WebApp.Controllers
 
         public IActionResult Details(int? id)
         {
-            _logger.LogInformation("Opening Database/Details page");
+            _logger.LogInformation("Opening User/Details page");
 
-            if (id != null)
+            if (id == null)
             {
-                var user = _userService.Details((int)id);
-
-                if (user != null)
-                {
-                    return View(user);
-                }
+                return RedirectToAction("Index");
             }
 
-            return RedirectToAction("Index");
+            var user = _userService.Details((int)id);
+
+            if (user == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            return View(user);
         }
     }
 }

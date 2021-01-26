@@ -1,0 +1,13 @@
+﻿@using ITechArt.Common.Utils
+
+@{
+    ViewData["Title"] = "About";
+}
+
+<h2>About Page</h2>
+
+<p>Surveys Creator. Aliaksei Shukan, ITechArt, 2021</p>
+
+<environment names="Development">
+    <p>@ITechArt.Common.Utils.AppVersionUtil.GetAppVersion()</p>
+</environment>    

@@ -1,0 +1,37 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewData["Title"] - SurveysCreator</title>
+</head>
+<body>
+<header>
+    <nav>
+        <div>
+            <a asp-controller="Home" asp-action="Index">SurveysCreator</a>
+            <div>
+                <ul>
+                    <li>
+                        <a asp-controller="Home" asp-action="Index">Home</a>
+                    </li>
+                    <li>
+                        <a asp-controller="About" asp-action="Index">About</a>
+                    </li>
+                </ul>
+            </div>
+            <span>Menu Bar</span>
+        </div>
+    </nav>
+</header>
+
+<div>
+    @RenderBody()
+</div>
+
+<footer>
+    <div>
+        &copy; 2021 - SurveysCreator
+    </div>
+</footer>
+</body>
+</html>

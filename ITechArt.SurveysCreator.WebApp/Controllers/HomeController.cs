@@ -18,7 +18,15 @@ namespace ITechArt.SurveysCreator.WebApp.Controllers
         
         public IActionResult Index()
         {
-            _logger.LogInformation("Opening Home page");
+            _logger.LogInformation("Opening Home/Index page");
+
+            return View();
+        }
+
+        public IActionResult UserSurveys()
+        {
+            _logger.LogInformation("Opening Home/UserSurveys page");
+
             return View();
         }
     }

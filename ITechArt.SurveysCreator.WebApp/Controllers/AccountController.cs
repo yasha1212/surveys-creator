@@ -7,18 +7,18 @@ using Microsoft.Extensions.Logging;
 
 namespace ITechArt.SurveysCreator.WebApp.Controllers
 {
-    public class HomeController : Controller
+    public class AccountController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<AccountController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        public AccountController(ILogger<AccountController> logger)
         {
             _logger = logger;
         }
-        
+
         public IActionResult Index()
         {
-            _logger.LogInformation("Opening Home/Index page");
+            _logger.LogInformation("Opening Account/Index page");
 
             return View();
         }

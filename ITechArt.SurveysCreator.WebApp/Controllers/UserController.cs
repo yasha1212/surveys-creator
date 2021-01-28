@@ -33,11 +33,9 @@ namespace ITechArt.SurveysCreator.WebApp.Controllers
 
             var user = new User()
             {
-                Age = 18,
                 Email = "doenglish1@mail.ru",
                 FirstName = "Lesha",
                 SecondName = "Shukan",
-                Login = "yasha1212",
             };
 
             return View(user);

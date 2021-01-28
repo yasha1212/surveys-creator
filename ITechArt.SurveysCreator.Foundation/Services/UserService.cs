@@ -44,9 +44,7 @@ namespace ITechArt.SurveysCreator.Foundation.Services
 
             if (user != null)
             {
-                user.Age = item.Age;
                 user.Email = item.Email;
-                user.Login = item.Login;
                 user.FirstName = item.FirstName;
                 user.SecondName = item.SecondName;
                 

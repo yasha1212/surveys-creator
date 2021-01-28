@@ -47,8 +47,9 @@ namespace ITechArt.SurveysCreator.WebApp
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseStaticFiles();
             app.UseExceptionLogger();
-            
+
             app.UseRouting();
 
             app.UseAuthentication();

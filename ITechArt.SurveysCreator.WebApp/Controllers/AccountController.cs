@@ -21,11 +21,42 @@ namespace ITechArt.SurveysCreator.WebApp.Controllers
             _signInManager = signInManager;
         }
 
+        public IActionResult SignUp()
+        {
+            _logger.LogInformation("Opening Account/SignUp page");
+
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SignUp(SignUpViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var user = new User() {Email = model.Email, UserName = model.Email};
+            var result = await _userManager.CreateAsync(user, model.Password);
+
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+
+                return View(model);
+            }
+
+            return RedirectToAction("Index", "Surveys");
+        }
+
         public IActionResult Login()
         {
             _logger.LogInformation("Opening Account/Login page");
 
-            return View(new LoginViewModel());
+            return View();
         }
 
         [HttpPost]

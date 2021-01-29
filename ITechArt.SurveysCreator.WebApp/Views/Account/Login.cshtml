@@ -1,7 +1,29 @@
-﻿@{
-    ViewData["Title"] = "Authentication";
+﻿@model ITechArt.SurveysCreator.WebApp.ViewModels.LoginViewModel
+
+@section Scripts 
+{
+    <partial name="_ValidationScriptsPartial"/>    
+}
+
+@{
+    ViewData["Title"] = "Log In";
 }
 
 <div class="text-center">
-    <h1 class="display-4">This is Login Page</h1>
+    <form method="post" asp-controller="Account" asp-action="Login">
+        <div class="pb-2">
+            <label asp-for="Email"></label><br />
+            <input asp-for="Email" /><br />
+            <span asp-validation-for="Email"></span>
+        </div>
+        <div class="pb-4">
+            <label asp-for="Password"></label><br />
+            <input asp-for="Password" /><br />
+            <span asp-validation-for="Password"></span>
+        </div>
+        <div class="pb-2">
+            <input class="btn-lg" type="submit" value="Log In" />
+        </div>
+        <div asp-validation-summary="ModelOnly"></div>
+    </form>
 </div>

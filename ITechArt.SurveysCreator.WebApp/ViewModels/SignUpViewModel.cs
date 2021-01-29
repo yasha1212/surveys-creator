@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ITechArt.SurveysCreator.WebApp.ViewModels
 {
@@ -16,7 +17,9 @@ namespace ITechArt.SurveysCreator.WebApp.ViewModels
         [Display(Name = "Second Name")]
         public string SecondName { get; set; }
 
-        [Required] public string Email { get; set; }
+        [Required]
+        [Remote("IsUnique", "Account", HttpMethod = "POST", ErrorMessage = "Some user with this email is already signed up!")]
+        public string Email { get; set; }
 
         [Required]
         [DataType(DataType.Password)]

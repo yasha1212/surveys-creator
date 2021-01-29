@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using ITechArt.SurveysCreator.DAL.Models;
+using ITechArt.SurveysCreator.Foundation.Services;
 using ITechArt.SurveysCreator.WebApp.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
@@ -12,13 +13,15 @@ namespace ITechArt.SurveysCreator.WebApp.Controllers
         private readonly ILogger<AccountController> _logger;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
+        private readonly IUserService _userService;
 
-        public AccountController(ILogger<AccountController> logger,
+        public AccountController(ILogger<AccountController> logger, IUserService userService,
             UserManager<User> userManager, SignInManager<User> signInManager)
         {
             _logger = logger;
             _userManager = userManager;
             _signInManager = signInManager;
+            _userService = userService;
         }
 
         public IActionResult SignUp()
@@ -87,6 +90,22 @@ namespace ITechArt.SurveysCreator.WebApp.Controllers
             await _signInManager.SignOutAsync();
 
             return RedirectToAction("Login", "Account");
+        }
+
+        [HttpPost]
+        public JsonResult IsUnique(string email)
+        {
+            List<User> users = _userService.Get().ToList();
+
+            string existingEmail = users.Where(u => u.NormalizedEmail == email.ToUpper())
+                                   .Select(u => u.Email).FirstOrDefault();
+
+            if (existingEmail != null)
+            {
+                return Json(false);
+            }
+
+            return Json(true);
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
 using ITechArt.SurveysCreator.DAL.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 

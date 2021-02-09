@@ -1,8 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using ITechArt.SurveysCreator.DAL.Models;
 using ITechArt.SurveysCreator.Foundation.Services;
 using Microsoft.Extensions.Logging;
@@ -33,11 +29,9 @@ namespace ITechArt.SurveysCreator.WebApp.Controllers
 
             var user = new User()
             {
-                Age = 18,
                 Email = "doenglish1@mail.ru",
                 FirstName = "Lesha",
                 SecondName = "Shukan",
-                Login = "yasha1212",
             };
 
             return View(user);

@@ -1,8 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
 namespace ITechArt.SurveysCreator.WebApp.Controllers
@@ -18,7 +14,8 @@ namespace ITechArt.SurveysCreator.WebApp.Controllers
         
         public IActionResult Index()
         {
-            _logger.LogInformation("Opening Home page");
+            _logger.LogInformation("Opening Home/Index page");
+
             return View();
         }
     }

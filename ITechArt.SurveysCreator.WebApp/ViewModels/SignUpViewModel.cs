@@ -18,6 +18,7 @@ namespace ITechArt.SurveysCreator.WebApp.ViewModels
         public string SecondName { get; set; }
 
         [Required]
+        [EmailAddress(ErrorMessage = "Current email is not valid!")]
         [Remote("IsUnique", "Account", HttpMethod = "POST", ErrorMessage = "Some user with this email is already signed up!")]
         public string Email { get; set; }
 

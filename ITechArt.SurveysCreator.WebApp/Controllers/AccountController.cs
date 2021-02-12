@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using ITechArt.SurveysCreator.DAL.Models;
 using ITechArt.SurveysCreator.Foundation.Services;
@@ -39,7 +41,11 @@ namespace ITechArt.SurveysCreator.WebApp.Controllers
                 return View(model);
             }
 
-            var user = new User() {Email = model.Email, UserName = model.Email};
+            var user = new User()
+            {
+                Email = model.Email, 
+                UserName = model.Email
+            };
             var result = await _userManager.CreateAsync(user, model.Password);
 
             if (!result.Succeeded)
@@ -97,8 +103,9 @@ namespace ITechArt.SurveysCreator.WebApp.Controllers
         {
             List<User> users = _userService.Get().ToList();
 
-            string existingEmail = users.Where(u => u.NormalizedEmail == email.ToUpper())
-                                   .Select(u => u.Email).FirstOrDefault();
+            string existingEmail = users
+                .Where(u => u.NormalizedEmail == email.ToUpper())
+                .Select(u => u.Email).FirstOrDefault();
 
             if (existingEmail != null)
             {

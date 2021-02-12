@@ -1,0 +1,44 @@
+﻿@model ITechArt.SurveysCreator.WebApp.ViewModels.SignUpViewModel
+
+@section Scripts
+{
+    <partial name="_ValidationScriptsPartial" />
+}
+
+@{
+    ViewData["Title"] = "Sign Up";
+}
+
+<div class="text-center">
+    <form method="post" asp-controller="Account" asp-action="SignUp">
+        <div class="pb-2">
+            <label asp-for="Email"></label><br />
+            <input asp-for="Email" /><br />
+            <span asp-validation-for="Email"></span>
+        </div>
+        <div class="pb-2">
+            <label asp-for="FirstName"></label><br />
+            <input asp-for="FirstName" /><br />
+            <span asp-validation-for="FirstName"></span>
+        </div>
+        <div class="pb-2">
+            <label asp-for="SecondName"></label><br />
+            <input asp-for="SecondName" /><br />
+            <span asp-validation-for="SecondName"></span>
+        </div>
+        <div class="pb-2">
+            <label asp-for="Password"></label><br />
+            <input asp-for="Password" /><br />
+            <span asp-validation-for="Password"></span>
+        </div>
+        <div class="pb-4">
+            <label asp-for="PasswordConfirm"></label><br />
+            <input asp-for="PasswordConfirm" /><br />
+            <span asp-validation-for="PasswordConfirm"></span>
+        </div>
+        <div class="pb-2">
+            <input class="btn-lg" type="submit" value="Sign Up" />
+        </div>
+        <div asp-validation-summary="ModelOnly"></div>
+    </form>
+</div>

@@ -29,7 +29,12 @@ namespace ITechArt.SurveysCreator.WebApp
             services.AddDbContext<SurveysCreatorDbContext>(options =>
                 options.UseSqlServer(AppConfiguration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<User, IdentityRole>()
+            services.AddIdentity<User, IdentityRole>(options =>
+                {
+                    options.Password.RequireLowercase = false;
+                    options.Password.RequireUppercase = false;
+                    options.Password.RequiredLength = 7;
+                })
                 .AddEntityFrameworkStores<SurveysCreatorDbContext>();
 
             services.AddControllersWithViews();

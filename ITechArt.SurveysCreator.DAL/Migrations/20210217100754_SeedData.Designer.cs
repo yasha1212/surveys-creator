@@ -4,14 +4,16 @@ using ITechArt.SurveysCreator.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ITechArt.SurveysCreator.DAL.Migrations
 {
     [DbContext(typeof(SurveysCreatorDbContext))]
-    partial class SurveysCreatorDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210217100754_SeedData")]
+    partial class SeedData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

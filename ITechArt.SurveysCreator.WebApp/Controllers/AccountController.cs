@@ -44,8 +44,11 @@ namespace ITechArt.SurveysCreator.WebApp.Controllers
             var user = new User()
             {
                 Email = model.Email, 
-                UserName = model.Email
+                UserName = model.Email,
+                FirstName = model.FirstName,
+                SecondName = model.SecondName
             };
+
             var result = await _userManager.CreateAsync(user, model.Password);
 
             if (!result.Succeeded)
@@ -57,6 +60,8 @@ namespace ITechArt.SurveysCreator.WebApp.Controllers
 
                 return View(model);
             }
+
+            await _userManager.AddToRoleAsync(user, "user");
 
             return RedirectToAction("Index", "Surveys");
         }

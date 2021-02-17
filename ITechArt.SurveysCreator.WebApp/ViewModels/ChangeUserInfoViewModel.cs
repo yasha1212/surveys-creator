@@ -10,8 +10,10 @@ namespace ITechArt.SurveysCreator.WebApp.ViewModels
     public class ChangeUserInfoViewModel
     {
         [Required]
+        public string Id { get; set; }
+
+        [Required]
         [EmailAddress(ErrorMessage = "Current email is not valid!")]
-        [Remote("IsUnique", "Account", HttpMethod = "POST", ErrorMessage = "Some user with this email is already signed up!")]
         public string Email { get; set; }
 
         [Required]
@@ -22,11 +24,17 @@ namespace ITechArt.SurveysCreator.WebApp.ViewModels
         [Display(Name = "Second Name")]
         public string SecondName { get; set; }
 
-        [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
         [Required]
         public string Role { get; set; }
+
+        public List<string> AllRoles { get; set; }
+
+        public ChangeUserInfoViewModel()
+        {
+            AllRoles = new List<string>();
+        }
     }
 }

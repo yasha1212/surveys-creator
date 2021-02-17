@@ -24,13 +24,32 @@ namespace ITechArt.SurveysCreator.WebApp.Controllers
             _roleManager = roleManager;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             _logger.LogInformation("Opening Admin/Index page");
 
             var users = _userManager.Users.ToList();
 
-            return View(users);
+            var usersInfo = users
+                .Select (u => new ShowUserInfoViewModel
+                    {
+                        Id = u.Id,
+                        Email = u.Email,
+                        FirstName = u.FirstName,
+                        SecondName = u.SecondName
+                    })
+                .ToList();
+
+            foreach (var user in users)
+            {
+                var currentRole = (await _userManager.GetRolesAsync(user)).FirstOrDefault();
+
+                var userInfo = usersInfo.FirstOrDefault(ui => ui.Id == user.Id);
+
+                userInfo.Role = currentRole;
+            }
+
+            return View(usersInfo);
         }
 
         public async Task<IActionResult> Edit(string id)

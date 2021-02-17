@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using ITechArt.SurveysCreator.DAL.Models;
 using Microsoft.AspNetCore.Mvc;
-using ITechArt.SurveysCreator.Foundation.Services;
 using ITechArt.SurveysCreator.WebApp.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -122,7 +121,86 @@ namespace ITechArt.SurveysCreator.WebApp.Controllers
                 {
                     ModelState.AddModelError("", error.Description);
                 }
+
+                return View(model);
             }
+
+            return RedirectToAction("Index");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(string id)
+        {
+            if (id == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var user = await _userManager.FindByIdAsync(id);
+
+            if (user == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            await _userManager.DeleteAsync(user);
+
+            var userRoles = await _userManager.GetRolesAsync(user);
+
+            foreach (var role in userRoles)
+            {
+                await _userManager.RemoveFromRoleAsync(user, role);
+            }
+
+            await _userManager.DeleteAsync(user);
+
+            return RedirectToAction("Index");
+        }
+
+        public IActionResult Create()
+        {
+            _logger.LogInformation("Opening Account/SignUp page");
+
+            var allRoles = _roleManager.Roles
+                .Select(r => r.Name).ToList();
+
+            var model = new CreateUserViewModel
+            {
+                AllRoles = allRoles
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(CreateUserViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var user = new User()
+            {
+                Email = model.Email,
+                UserName = model.Email,
+                FirstName = model.FirstName,
+                SecondName = model.SecondName
+            };
+
+            var result = await _userManager.CreateAsync(user, model.Password);
+
+            if (!result.Succeeded)
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+
+                return View(model);
+            }
+
+            await _userManager.AddToRoleAsync(user, model.Role);
 
             return RedirectToAction("Index");
         }

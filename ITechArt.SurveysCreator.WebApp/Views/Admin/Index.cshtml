@@ -6,6 +6,7 @@
 
 <h2>Users</h2>
 
+<a class="btn btn-primary mb-4" asp-action="Create">Create</a>
 <div class="text-center">
     <table class="table">
         @foreach (var item in Model)
@@ -24,7 +25,10 @@
                     @Html.DisplayFor(model => item.Role)
                 </td>
                 <td>
-                    <a class="btn btn-sm btn-primary" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                    <form method="post" asp-controller="Admin" asp-action="Delete" asp-route-id="@item.Id">
+                        <input class="btn btn-sm btn-outline-primary m-2" type="submit" value="Delete" />
+                    </form>
+                    <a class="btn btn-sm btn-outline-primary m-2" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
                 </td>
             </tr>
         }

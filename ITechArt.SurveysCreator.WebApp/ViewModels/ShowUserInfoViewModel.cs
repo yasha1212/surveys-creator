@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace ITechArt.SurveysCreator.WebApp.ViewModels
+﻿namespace ITechArt.SurveysCreator.WebApp.ViewModels
 {
     public class ShowUserInfoViewModel
     {

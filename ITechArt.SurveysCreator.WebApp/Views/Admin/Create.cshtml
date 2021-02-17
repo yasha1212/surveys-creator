@@ -31,12 +31,12 @@
             <input asp-for="Password" /><br />
             <span asp-validation-for="Password"></span>
         </div>
-        <div class="pb-4 form-group">
+        <div class="pb-2 form-group">
             <label asp-for="PasswordConfirm"></label><br />
             <input asp-for="PasswordConfirm" /><br />
             <span asp-validation-for="PasswordConfirm"></span>
         </div>
-        <div class="pb-4 form-group">
+        <div class="pb-2 form-group">
             <label asp-for="Role"></label><br />
             @foreach (var role in Model.AllRoles)
             {
@@ -44,7 +44,7 @@
             }
             <span asp-validation-for="Role"></span>
         </div>
-        <input class="btn btn-primary pb-2" type="submit" value="Create" />
+        <input class="btn btn-outline-dark pb-2" type="submit" value="Create" />
         <div asp-validation-summary="ModelOnly"></div>
     </form>
 </div>

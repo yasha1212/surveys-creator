@@ -27,12 +27,12 @@
             <input asp-for="SecondName"/><br/>
             <span asp-validation-for="SecondName"></span>
         </div>
-        <div class="pb-4 form-group">
+        <div class="pb-2 form-group">
             <label asp-for="Password"></label><br/>
             <input asp-for="Password"/><br/>
             <span asp-validation-for="Password"></span>
         </div>
-        <div class="pb-4 form-group">
+        <div class="pb-2 form-group">
             <label asp-for="Role"></label><br/>
             @foreach(var role in Model.AllRoles)
             {
@@ -40,7 +40,7 @@
             }
             <span asp-validation-for="Role"></span>
         </div>
-        <input class="btn btn-primary pb-2" type="submit" value="Save"/>
+        <input class="btn btn-outline-dark" type="submit" value="Save"/>
         <div asp-validation-summary="ModelOnly"></div>
     </form>
 </div>

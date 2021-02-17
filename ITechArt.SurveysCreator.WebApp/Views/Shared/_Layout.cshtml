@@ -14,13 +14,10 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link text-dark" asp-controller="Surveys" asp-action="Index">Surveys</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-controller="Surveys" asp-action="MySurveys">MySurveys</a>
+                            <a class="nav-link text-dark" asp-controller="Surveys" asp-action="MySurveys">My surveys</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-controller="About" asp-action="Index">About</a>
@@ -29,23 +26,6 @@
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-controller="Admin" asp-action="Index">Users List</a>
-                            </li>
-                        }
-                        @if (User.Identity.IsAuthenticated)
-                        {
-                            <li class="nav-item">
-                                <form method="post" asp-controller="Account" asp-action="Logout">
-                                    <input class="nav-link text-dark" type="submit" value="Log Out" />
-                                </form>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Log In</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Account" asp-action="SignUp">Sign Up</a>
                             </li>
                         }
                     </ul>
@@ -58,6 +38,17 @@
             else if (User.Identity.IsAuthenticated)
             {
                 <div class="text-dark">Hello, @User.Identity.Name!</div>
+            }
+            @if (User.Identity.IsAuthenticated)
+            {
+                <form method="post" asp-controller="Account" asp-action="Logout">
+                    <input class="btn btn-outline-dark m-2" type="submit" value="Log Out" />
+                </form>
+            }
+            else
+            {
+                <a class="btn btn-outline-dark m-2" asp-controller="Account" asp-action="Login">Log In</a>
+                <a class="btn btn-outline-dark m-2" asp-controller="Account" asp-action="SignUp">Sign Up</a>
             }
         </nav>
     </header>

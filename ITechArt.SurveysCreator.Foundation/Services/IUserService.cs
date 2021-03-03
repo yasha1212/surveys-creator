@@ -1,18 +1,18 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using ITechArt.SurveysCreator.DAL.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace ITechArt.SurveysCreator.Foundation.Services
 {
     public interface IUserService
-    {
-        User Details(int id);
+    { 
+        Task<IdentityResult> SignUpAsync(User user, string password);
 
-        IEnumerable<User> Get();
+        Task<SignInResult> SignInAsync(string email, string password);
 
-        void Add(User item);
+        Task SignOutAsync();
 
-        void Edit(int id, User item);
-        
-        void Delete(int id);
+        bool Contains(string email);
     }
 }

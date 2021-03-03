@@ -1,74 +1,52 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using ITechArt.SurveysCreator.DAL;
 using ITechArt.SurveysCreator.DAL.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace ITechArt.SurveysCreator.Foundation.Services
 {
     public class UserService : IUserService
     {
         private readonly SurveysCreatorDbContext _context;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
 
-        public UserService(SurveysCreatorDbContext context)
+        public UserService(SurveysCreatorDbContext context, UserManager<User> userManager,
+            SignInManager<User> signInManager)
         {
             _context = context;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
 
-        public void Add(User item)
+        public async Task<IdentityResult> SignUpAsync(User user, string password)
         {
-            if (!_context.Users.Any(u => u.Id == item.Id))
+            var result = await _userManager.CreateAsync(user, password);
+
+            if (result.Succeeded)
             {
-                _context.Users.Add(item);
-                _context.SaveChanges();
+                await _userManager.AddToRoleAsync(user, "user");
             }
-            else
-            {
-                throw new Exception("Invalid add operation, because current item exists!");
-            }
+
+            return result;
         }
 
-        public User Details(int id)
+        public async Task<SignInResult> SignInAsync(string email, string password)
         {
-            return _context.Users.Find(id);
+            return await _signInManager.PasswordSignInAsync(email, password, false, false);
         }
 
-        public IEnumerable<User> Get()
+        public async Task SignOutAsync()
         {
-            return _context.Users.AsEnumerable();
+            await _signInManager.SignOutAsync();
         }
 
-        public void Edit(int id, User item)
+        public bool Contains(string email)
         {
-            var user = _context.Users.Find(id);
-
-            if (user != null)
-            {
-                user.Email = item.Email;
-                user.FirstName = item.FirstName;
-                user.SecondName = item.SecondName;
-                
-                _context.SaveChanges();
-            }
-            else
-            {
-                throw new Exception("Invalid edit operation, because current item does not exist!");
-            }
-        }
-
-        public void Delete(int id)
-        {
-            var user = _context.Users.Find(id);
-
-            if (user != null)
-            {
-                _context.Users.Remove(user);
-                _context.SaveChanges();
-            }
-            else
-            {
-                throw new Exception("Invalid delete operation, because current item does not exist!");
-            }
+            return _context.Users.AsQueryable().Select(u => u.NormalizedEmail).Contains(email.ToUpper());
         }
     }
 }

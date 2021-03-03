@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using ITechArt.SurveysCreator.DAL.Models;
 using ITechArt.SurveysCreator.Foundation.Services;
 using ITechArt.SurveysCreator.WebApp.ViewModels;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
 namespace ITechArt.SurveysCreator.WebApp.Controllers
@@ -13,16 +12,11 @@ namespace ITechArt.SurveysCreator.WebApp.Controllers
     public class AccountController : Controller
     {
         private readonly ILogger<AccountController> _logger;
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
         private readonly IUserService _userService;
 
-        public AccountController(ILogger<AccountController> logger, IUserService userService,
-            UserManager<User> userManager, SignInManager<User> signInManager)
+        public AccountController(ILogger<AccountController> logger, IUserService userService)
         {
             _logger = logger;
-            _userManager = userManager;
-            _signInManager = signInManager;
             _userService = userService;
         }
 
@@ -49,7 +43,7 @@ namespace ITechArt.SurveysCreator.WebApp.Controllers
                 SecondName = model.SecondName
             };
 
-            var result = await _userManager.CreateAsync(user, model.Password);
+            var result = await _userService.SignUpAsync(user, model.Password);
 
             if (!result.Succeeded)
             {
@@ -60,8 +54,6 @@ namespace ITechArt.SurveysCreator.WebApp.Controllers
 
                 return View(model);
             }
-
-            await _userManager.AddToRoleAsync(user, "user");
 
             return RedirectToAction("Index", "Surveys");
         }
@@ -81,7 +73,7 @@ namespace ITechArt.SurveysCreator.WebApp.Controllers
                 return View(model);
             }
 
-            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, false);
+            var result = await _userService.SignInAsync(model.Email, model.Password);
 
             if (!result.Succeeded)
             {
@@ -98,7 +90,7 @@ namespace ITechArt.SurveysCreator.WebApp.Controllers
         {
             _logger.LogInformation("Opening Account/Logout page");
 
-            await _signInManager.SignOutAsync();
+            await _userService.SignOutAsync();
 
             return RedirectToAction("Login", "Account");
         }
@@ -106,13 +98,7 @@ namespace ITechArt.SurveysCreator.WebApp.Controllers
         [HttpPost]
         public JsonResult IsUnique(string email)
         {
-            List<User> users = _userService.Get().ToList();
-
-            string existingEmail = users
-                .Where(u => u.NormalizedEmail == email.ToUpper())
-                .Select(u => u.Email).FirstOrDefault();
-
-            if (existingEmail != null)
+            if (_userService.Contains(email))
             {
                 return Json(false);
             }

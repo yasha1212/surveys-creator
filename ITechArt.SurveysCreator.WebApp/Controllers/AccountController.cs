@@ -98,7 +98,7 @@ namespace ITechArt.SurveysCreator.WebApp.Controllers
         [HttpPost]
         public JsonResult IsUnique(string email)
         {
-            if (_userService.Contains(email))
+            if (_userService.ContainsByEmail(email))
             {
                 return Json(false);
             }

@@ -1,10 +1,11 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using ITechArt.SurveysCreator.DAL.Models;
+using ITechArt.SurveysCreator.Foundation.Models;
+using ITechArt.SurveysCreator.Foundation.Services;
 using Microsoft.AspNetCore.Mvc;
 using ITechArt.SurveysCreator.WebApp.ViewModels;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
 namespace ITechArt.SurveysCreator.WebApp.Controllers
@@ -13,72 +14,47 @@ namespace ITechArt.SurveysCreator.WebApp.Controllers
     public class AdminController : Controller
     {
         private readonly ILogger<AdminController> _logger;
-        private readonly UserManager<User> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IUserService _userService;
 
-        public AdminController(ILogger<AdminController> logger, UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
+        public AdminController(ILogger<AdminController> logger, IUserService userService)
         {
             _logger = logger;
-            _userManager = userManager;
-            _roleManager = roleManager;
+            _userService = userService;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             _logger.LogInformation("Opening Admin/Index page");
 
-            var users = _userManager.Users.ToList();
-
-            var usersInfo = users
-                .Select (u => new ShowUserInfoViewModel
-                    {
-                        Id = u.Id,
-                        Email = u.Email,
-                        FirstName = u.FirstName,
-                        SecondName = u.SecondName
-                    })
-                .ToList();
-
-            foreach (var user in users)
-            {
-                var currentRole = (await _userManager.GetRolesAsync(user)).FirstOrDefault();
-
-                var userInfo = usersInfo.FirstOrDefault(ui => ui.Id == user.Id);
-
-                userInfo.Role = currentRole;
-            }
+            var usersInfo = _userService.GetUsersInfo();
 
             return View(usersInfo);
         }
 
-        public async Task<IActionResult> Edit(string id)
+        public IActionResult Edit(string id)
         {
             _logger.LogInformation("Opening Admin/Edit page");
 
             if (id == null)
             {
-                return RedirectToAction("Index");
+                return NotFound();
             }
 
-            var user = await _userManager.FindByIdAsync(id);
-
-            if (user == null)
+            if (!_userService.ContainsById(id))
             {
-                return RedirectToAction("Index");
+                return NotFound();
             }
 
-            var userRoles = await _userManager.GetRolesAsync(user);
-
-            var allRoles = _roleManager.Roles
-                .Select(r => r.Name).ToList();
+            var allRoles = _userService.GetRoles();
+            var userInfo = _userService.GetUserInfo(id);
 
             var model = new ChangeUserInfoViewModel
             {
-                Email = user.Email,
-                FirstName = user.FirstName,
-                SecondName = user.SecondName,
-                Role = userRoles.FirstOrDefault(),
-                AllRoles = allRoles
+                Email = userInfo.Email,
+                FirstName = userInfo.FirstName,
+                SecondName = userInfo.SecondName,
+                Role = userInfo.Role,
+                AllRoles = allRoles.ToList()
             };
 
             return View(model);
@@ -92,28 +68,19 @@ namespace ITechArt.SurveysCreator.WebApp.Controllers
                 return View(model);
             }
 
-            var user = await _userManager.FindByIdAsync(model.Id);
-
-            if (user == null)
+            if (!_userService.ContainsById(model.Id))
             {
-                return RedirectToAction("Index");
+                return NotFound();
             }
 
-            user.Email = model.Email;
-            user.FirstName = model.FirstName;
-            user.SecondName = model.SecondName;
-
-            var userRoles = await _userManager.GetRolesAsync(user);
-
-            await _userManager.RemoveFromRolesAsync(user, userRoles);
-            await _userManager.AddToRoleAsync(user, model.Role);
-
-            if (model.Password != null)
+            var result = await _userService.EditAsync(new UserInfo
             {
-                user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, model.Password);
-            }
-
-            var result = await _userManager.UpdateAsync(user);
+                Id = model.Id,
+                Email = model.Email,
+                FirstName = model.FirstName,
+                SecondName = model.SecondName,
+                Role = model.Role
+            }, model.Password);
 
             if (!result.Succeeded)
             {
@@ -133,26 +100,15 @@ namespace ITechArt.SurveysCreator.WebApp.Controllers
         {
             if (id == null)
             {
-                return RedirectToAction("Index");
+                return NotFound();
             }
 
-            var user = await _userManager.FindByIdAsync(id);
-
-            if (user == null)
+            if (!_userService.ContainsById(id))
             {
-                return RedirectToAction("Index");
+                return NotFound();
             }
 
-            await _userManager.DeleteAsync(user);
-
-            var userRoles = await _userManager.GetRolesAsync(user);
-
-            foreach (var role in userRoles)
-            {
-                await _userManager.RemoveFromRoleAsync(user, role);
-            }
-
-            await _userManager.DeleteAsync(user);
+            await _userService.DeleteAsync(id);
 
             return RedirectToAction("Index");
         }
@@ -161,12 +117,11 @@ namespace ITechArt.SurveysCreator.WebApp.Controllers
         {
             _logger.LogInformation("Opening Account/SignUp page");
 
-            var allRoles = _roleManager.Roles
-                .Select(r => r.Name).ToList();
+            var allRoles = _userService.GetRoles();
 
             var model = new CreateUserViewModel
             {
-                AllRoles = allRoles
+                AllRoles = allRoles.ToList()
             };
 
             return View(model);
@@ -188,7 +143,7 @@ namespace ITechArt.SurveysCreator.WebApp.Controllers
                 SecondName = model.SecondName
             };
 
-            var result = await _userManager.CreateAsync(user, model.Password);
+            var result = await _userService.CreateAsync(user, model.Password, model.Role);
 
             if (!result.Succeeded)
             {
@@ -199,8 +154,6 @@ namespace ITechArt.SurveysCreator.WebApp.Controllers
 
                 return View(model);
             }
-
-            await _userManager.AddToRoleAsync(user, model.Role);
 
             return RedirectToAction("Index");
         }

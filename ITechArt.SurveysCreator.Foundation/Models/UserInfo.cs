@@ -1,6 +1,6 @@
-﻿namespace ITechArt.SurveysCreator.WebApp.ViewModels
+﻿namespace ITechArt.SurveysCreator.Foundation.Models
 {
-    public class ShowUserInfoViewModel
+    public class UserInfo
     {
         public string Id { get; set; }
 

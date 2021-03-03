@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using ITechArt.SurveysCreator.DAL.Models;
+using ITechArt.SurveysCreator.Foundation.Models;
 using Microsoft.AspNetCore.Identity;
 
 namespace ITechArt.SurveysCreator.Foundation.Services
@@ -13,6 +14,20 @@ namespace ITechArt.SurveysCreator.Foundation.Services
 
         Task SignOutAsync();
 
-        bool Contains(string email);
+        bool ContainsByEmail(string email);
+
+        bool ContainsById(string id);
+
+        IEnumerable<UserInfo> GetUsersInfo();
+
+        UserInfo GetUserInfo(string id);
+
+        IEnumerable<string> GetRoles();
+
+        Task<IdentityResult> EditAsync(UserInfo userInfo, string password);
+
+        Task DeleteAsync(string id);
+
+        Task<IdentityResult> CreateAsync(User user, string password, string role);
     }
 }

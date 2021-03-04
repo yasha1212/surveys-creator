@@ -25,9 +25,13 @@
                     @Html.DisplayFor(model => item.Role)
                 </td>
                 <td class="d-flex justify-content-center align-items-center">
-                    <a class="btn btn-sm btn-outline-dark mr-2" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                    <a class="btn btn-sm btn-outline-dark mr-2" asp-action="Edit" asp-route-id="@item.Id">
+                        <img src="edit.png" alt="Edit" style="max-height: 20px; max-width: 20px"/>
+                    </a>
                     <form method="post" asp-controller="Admin" asp-action="Delete" asp-route-id="@item.Id">
-                        <input class="btn btn-sm btn-outline-dark ml-2" type="submit" value="Delete" />
+                        <button class="btn btn-sm btn-outline-dark ml-2" type="submit">
+                            <img src="delete.png" alt="Delete" style="max-height: 20px; max-width: 20px" />
+                        </button>
                     </form>
                 </td>
             </tr>

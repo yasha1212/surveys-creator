@@ -13,6 +13,8 @@ namespace ITechArt.SurveysCreator.WebApp.Controllers
     [Authorize(Roles = "admin")]
     public class AdminController : Controller
     {
+        private const int UsersPageSize = 10;
+
         private readonly ILogger<AdminController> _logger;
         private readonly IUserService _userService;
 
@@ -22,13 +24,28 @@ namespace ITechArt.SurveysCreator.WebApp.Controllers
             _userService = userService;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int pageNumber = 1)
         {
             _logger.LogInformation("Opening Admin/Index page");
 
-            var usersInfo = _userService.GetUsersInfo();
+            var totalPagesCount = _userService.GetUserPagesCount(UsersPageSize);
 
-            return View(usersInfo);
+            var pagesInfo = new PagesInfo
+            {
+                PageNumber = pageNumber <= (totalPagesCount) && (pageNumber >= 1) ? pageNumber : 1,
+                PageSize = UsersPageSize,
+                TotalPagesCount = totalPagesCount
+            };
+
+            var usersInfo = _userService.GetUsersInfo(pagesInfo);
+
+            var model = new UsersPagesViewModel
+            {
+                UsersInfo = usersInfo,
+                PagesInfo = pagesInfo
+            };
+
+            return View(model);
         }
 
         public IActionResult Edit(string id)

@@ -18,7 +18,9 @@ namespace ITechArt.SurveysCreator.Foundation.Services
 
         bool ContainsById(string id);
 
-        IEnumerable<UserInfo> GetUsersInfo();
+        IEnumerable<UserInfo> GetUsersInfo(PagesInfo pagesInfo);
+
+        int GetUserPagesCount(int pageSize);
 
         UserInfo GetUserInfo(string id);
 

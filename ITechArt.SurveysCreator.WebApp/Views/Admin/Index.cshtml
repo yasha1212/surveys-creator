@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ITechArt.SurveysCreator.Foundation.Models.UserInfo>
+﻿@model ITechArt.SurveysCreator.WebApp.ViewModels.UsersPagesViewModel
 
 @{
     ViewData["Title"] = "Users List";
@@ -9,7 +9,7 @@
 <a class="btn btn-dark mb-4" asp-action="Create">Create</a>
 <div class="text-center">
     <table class="table">
-        @foreach (var item in Model)
+        @foreach (var item in Model.UsersInfo)
         {
             <tr>
                 <td>
@@ -24,13 +24,35 @@
                 <td>
                     @Html.DisplayFor(model => item.Role)
                 </td>
-                <td>
+                <td class="d-flex justify-content-center align-items-center">
+                    <a class="btn btn-sm btn-outline-dark mr-2" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
                     <form method="post" asp-controller="Admin" asp-action="Delete" asp-route-id="@item.Id">
-                        <input class="btn btn-sm btn-outline-dark m-2" type="submit" value="Delete" />
+                        <input class="btn btn-sm btn-outline-dark ml-2" type="submit" value="Delete" />
                     </form>
-                    <a class="btn btn-sm btn-outline-dark m-2" asp-action="Edit" asp-route-id="@item.Id">Edit</a>
                 </td>
             </tr>
         }
     </table>
+    <div class="d-flex justify-content-center align-items-center">
+
+        @if (Model.PagesInfo.PageNumber == 1)
+        {
+            <a class="btn btn-sm btn-dark px-2 disabled" aria-disabled="True" tabindex="-1" asp-action="Index" asp-route-pagenumber="@(Model.PagesInfo.PageNumber - 1)"> &lt; </a>
+        }
+        else
+        {
+    <a class="btn btn-sm btn-dark px-2" asp-action="Index" asp-route-pagenumber="@(Model.PagesInfo.PageNumber - 1)"> &lt; </a>
+        }
+
+        <label class="px-4 m-0">@Model.PagesInfo.PageNumber</label>
+
+        @if (Model.PagesInfo.PageNumber == Model.PagesInfo.TotalPagesCount)
+        {
+            <a class="btn btn-sm btn-dark px-2 disabled" aria-disabled="True" tabindex="-1" asp-action="Index" asp-route-pagenumber="@(Model.PagesInfo.PageNumber + 1)"> > </a>
+        }
+        else
+        {
+            <a class="btn btn-sm btn-dark px-2" asp-action="Index" asp-route-pagenumber="@(Model.PagesInfo.PageNumber + 1)"> > </a>
+        }
+    </div>
 </div>

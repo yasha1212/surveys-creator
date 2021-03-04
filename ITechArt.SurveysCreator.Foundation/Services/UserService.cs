@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ITechArt.SurveysCreator.DAL;
@@ -51,7 +52,7 @@ namespace ITechArt.SurveysCreator.Foundation.Services
                 .Contains(id);
         }
 
-        public IEnumerable<UserInfo> GetUsersInfo()
+        public IEnumerable<UserInfo> GetUsersInfo(PagesInfo pagesInfo)
         {
             return _context.Users
                 .SelectMany(u => _context.UserRoles.Where(ur => ur.UserId == u.Id),
@@ -71,7 +72,37 @@ namespace ITechArt.SurveysCreator.Foundation.Services
                         FirstName = x.FirstName,
                         SecondName = x.SecondName,
                         Role = r.Name
-                    });
+                    })
+                .Skip((pagesInfo.PageNumber - 1) * pagesInfo.PageSize)
+                .Take(pagesInfo.PageSize);
+        }
+
+        public int GetUserPagesCount(int pageSize)
+        {
+            var usersCount = _context.Users
+                .SelectMany(u => _context.UserRoles.Where(ur => ur.UserId == u.Id),
+                    (u, ur) => new
+                    {
+                        u.Id,
+                        u.Email,
+                        u.FirstName,
+                        u.SecondName,
+                        ur.RoleId
+                    })
+                .SelectMany(x => _context.Roles.Where(r => r.Id == x.RoleId),
+                    (x, r) => new UserInfo
+                    {
+                        Id = x.Id,
+                        Email = x.Email,
+                        FirstName = x.FirstName,
+                        SecondName = x.SecondName,
+                        Role = r.Name
+                    })
+                .Count();
+
+            var result = (double)usersCount / (double)pageSize;
+
+            return (int)Math.Ceiling(result);
         }
 
         public UserInfo GetUserInfo(string id)

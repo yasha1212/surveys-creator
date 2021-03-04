@@ -130,6 +130,8 @@ namespace ITechArt.SurveysCreator.WebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateUserViewModel model)
         {
+            model.AllRoles = _userService.GetRoles().ToList();
+
             if (!ModelState.IsValid)
             {
                 return View(model);

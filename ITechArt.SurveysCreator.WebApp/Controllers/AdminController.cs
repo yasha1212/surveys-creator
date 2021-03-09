@@ -57,13 +57,13 @@ namespace ITechArt.SurveysCreator.WebApp.Controllers
                 return NotFound();
             }
 
-            if (!_userService.ContainsById(id))
+            var allRoles = _userService.GetRoles();
+            var userInfo = _userService.GetUserInfo(id);
+
+            if (userInfo == null)
             {
                 return NotFound();
             }
-
-            var allRoles = _userService.GetRoles();
-            var userInfo = _userService.GetUserInfo(id);
 
             var model = new ChangeUserInfoViewModel
             {
@@ -116,11 +116,6 @@ namespace ITechArt.SurveysCreator.WebApp.Controllers
         public async Task<IActionResult> Delete(string id)
         {
             if (id == null)
-            {
-                return NotFound();
-            }
-
-            if (!_userService.ContainsById(id))
             {
                 return NotFound();
             }

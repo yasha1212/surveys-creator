@@ -109,7 +109,7 @@ namespace ITechArt.SurveysCreator.Foundation.Services
         {
             return _context.Users
                 .Where(u => u.Id == id)
-                .SelectMany(u => _context.UserRoles.Where(ur => ur.UserId == u.Id),
+                .SelectMany(u => _context.UserRoles.Where(ur => ur.UserId == u.Id).DefaultIfEmpty(),
                     (u, ur) => new
                     {
                         u.Id,
@@ -118,7 +118,7 @@ namespace ITechArt.SurveysCreator.Foundation.Services
                         u.SecondName,
                         ur.RoleId
                     })
-                .SelectMany(x => _context.Roles.Where(r => r.Id == x.RoleId),
+                .SelectMany(x => _context.Roles.Where(r => r.Id == x.RoleId).DefaultIfEmpty(),
                     (x, r) => new UserInfo
                     {
                         Id = x.Id,
@@ -127,7 +127,7 @@ namespace ITechArt.SurveysCreator.Foundation.Services
                         SecondName = x.SecondName,
                         Role = r.Name
                     })
-                .First();
+                .FirstOrDefault();
         }
 
         public IEnumerable<string> GetRoles()

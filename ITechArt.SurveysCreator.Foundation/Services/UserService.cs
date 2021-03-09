@@ -6,6 +6,7 @@ using ITechArt.SurveysCreator.DAL;
 using ITechArt.SurveysCreator.DAL.Models;
 using ITechArt.SurveysCreator.Foundation.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace ITechArt.SurveysCreator.Foundation.Services
 {
@@ -38,23 +39,23 @@ namespace ITechArt.SurveysCreator.Foundation.Services
             await _signInManager.SignOutAsync();
         }
 
-        public bool ContainsByEmail(string email)
+        public async Task<bool> ContainsByEmailAsync(string email)
         {
-            return _context.Users
+            return await _context.Users
                 .Select(u => u.NormalizedEmail)
-                .Contains(email.ToUpper());
+                .ContainsAsync(email.ToUpper());
         }
 
-        public bool ContainsById(string id)
+        public async Task<bool> ContainsByIdAsync(string id)
         {
-            return _context.Users
+            return await _context.Users
                 .Select(u => u.Id)
-                .Contains(id);
+                .ContainsAsync(id);
         }
 
-        public IEnumerable<UserInfo> GetUsersInfo(PagesInfo pagesInfo)
+        public async Task<IEnumerable<UserInfo>> GetUsersInfoAsync(PagesInfo pagesInfo)
         {
-            return _context.Users
+            return await _context.Users
                 .SelectMany(u => _context.UserRoles.Where(ur => ur.UserId == u.Id),
                     (u, ur) => new
                     {
@@ -74,12 +75,13 @@ namespace ITechArt.SurveysCreator.Foundation.Services
                         Role = r.Name
                     })
                 .Skip((pagesInfo.PageNumber - 1) * pagesInfo.PageSize)
-                .Take(pagesInfo.PageSize);
+                .Take(pagesInfo.PageSize)
+                .ToListAsync();
         }
 
-        public int GetUserPagesCount(int pageSize)
+        public async Task<int> GetUserPagesCountAsync(int pageSize)
         {
-            var usersCount = _context.Users
+            var usersCount = await _context.Users
                 .SelectMany(u => _context.UserRoles.Where(ur => ur.UserId == u.Id),
                     (u, ur) => new
                     {
@@ -98,16 +100,16 @@ namespace ITechArt.SurveysCreator.Foundation.Services
                         SecondName = x.SecondName,
                         Role = r.Name
                     })
-                .Count();
+                .CountAsync();
 
             var result = (double)usersCount / (double)pageSize;
 
             return (int)Math.Ceiling(result);
         }
 
-        public UserInfo GetUserInfo(string id)
+        public async Task<UserInfo> GetUserInfoAsync(string id)
         {
-            return _context.Users
+            return await _context.Users
                 .Where(u => u.Id == id)
                 .SelectMany(u => _context.UserRoles.Where(ur => ur.UserId == u.Id).DefaultIfEmpty(),
                     (u, ur) => new
@@ -127,13 +129,14 @@ namespace ITechArt.SurveysCreator.Foundation.Services
                         SecondName = x.SecondName,
                         Role = r.Name
                     })
-                .FirstOrDefault();
+                .FirstOrDefaultAsync();
         }
 
-        public IEnumerable<string> GetRoles()
+        public async Task<List<string>> GetRolesAsync()
         {
-            return _context.Roles
-                .Select(r => r.Name);
+            return await _context.Roles
+                .Select(r => r.Name)
+                .ToListAsync();
         }
 
         public async Task<IdentityResult> EditAsync(UserInfo userInfo, string password)

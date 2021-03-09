@@ -24,11 +24,11 @@ namespace ITechArt.SurveysCreator.WebApp.Controllers
             _userService = userService;
         }
 
-        public IActionResult Index(int pageNumber = 1)
+        public async Task<IActionResult> Index(int pageNumber = 1)
         {
             _logger.LogInformation("Opening Admin/Index page");
 
-            var totalPagesCount = _userService.GetUserPagesCount(UsersPageSize);
+            var totalPagesCount = await _userService.GetUserPagesCountAsync(UsersPageSize);
 
             var pagesInfo = new PagesInfo
             {
@@ -37,7 +37,7 @@ namespace ITechArt.SurveysCreator.WebApp.Controllers
                 TotalPagesCount = totalPagesCount
             };
 
-            var usersInfo = _userService.GetUsersInfo(pagesInfo);
+            var usersInfo = await _userService.GetUsersInfoAsync(pagesInfo);
 
             var model = new UsersPagesViewModel
             {
@@ -48,7 +48,7 @@ namespace ITechArt.SurveysCreator.WebApp.Controllers
             return View(model);
         }
 
-        public IActionResult Edit(string id)
+        public async Task<IActionResult> Edit(string id)
         {
             _logger.LogInformation("Opening Admin/Edit page");
 
@@ -57,8 +57,8 @@ namespace ITechArt.SurveysCreator.WebApp.Controllers
                 return NotFound();
             }
 
-            var allRoles = _userService.GetRoles();
-            var userInfo = _userService.GetUserInfo(id);
+            var allRoles = await _userService.GetRolesAsync();
+            var userInfo = await _userService.GetUserInfoAsync(id);
 
             if (userInfo == null)
             {
@@ -85,7 +85,7 @@ namespace ITechArt.SurveysCreator.WebApp.Controllers
                 return View(model);
             }
 
-            if (!_userService.ContainsById(model.Id))
+            if (! await _userService.ContainsByIdAsync(model.Id))
             {
                 return NotFound();
             }
@@ -125,11 +125,11 @@ namespace ITechArt.SurveysCreator.WebApp.Controllers
             return RedirectToAction("Index");
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             _logger.LogInformation("Opening Account/SignUp page");
 
-            var allRoles = _userService.GetRoles();
+            var allRoles = await _userService.GetRolesAsync();
 
             var model = new CreateUserViewModel
             {
@@ -142,7 +142,7 @@ namespace ITechArt.SurveysCreator.WebApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreateUserViewModel model)
         {
-            model.AllRoles = _userService.GetRoles().ToList();
+            model.AllRoles = await _userService.GetRolesAsync();
 
             if (!ModelState.IsValid)
             {

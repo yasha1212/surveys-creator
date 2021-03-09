@@ -14,17 +14,17 @@ namespace ITechArt.SurveysCreator.Foundation.Services
 
         Task SignOutAsync();
 
-        bool ContainsByEmail(string email);
+        Task<bool> ContainsByEmailAsync(string email);
 
-        bool ContainsById(string id);
+        Task<bool> ContainsByIdAsync(string id);
 
-        IEnumerable<UserInfo> GetUsersInfo(PagesInfo pagesInfo);
+        Task<IEnumerable<UserInfo>> GetUsersInfoAsync(PagesInfo pagesInfo);
 
-        int GetUserPagesCount(int pageSize);
+        Task<int> GetUserPagesCountAsync(int pageSize);
 
-        UserInfo GetUserInfo(string id);
+        Task<UserInfo> GetUserInfoAsync(string id);
 
-        IEnumerable<string> GetRoles();
+        Task<List<string>> GetRolesAsync();
 
         Task<IdentityResult> EditAsync(UserInfo userInfo, string password);
 

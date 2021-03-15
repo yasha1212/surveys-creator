@@ -38,6 +38,11 @@ namespace ITechArt.SurveysCreator.WebApp
                 .AddEntityFrameworkStores<SurveysCreatorDbContext>();
 
             services.AddControllersWithViews();
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.AccessDeniedPath = "/Home/Index";
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)

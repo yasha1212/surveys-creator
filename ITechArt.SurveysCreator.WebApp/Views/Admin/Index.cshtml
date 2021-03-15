@@ -1,0 +1,62 @@
+﻿@model ITechArt.SurveysCreator.Foundation.Models.PagedResponse<ITechArt.SurveysCreator.Foundation.Models.UserInfo>
+
+@{
+    ViewData["Title"] = "Users List";
+}
+
+<h2>Users</h2>
+
+<a class="btn btn-dark mb-4" asp-action="Create">Create</a>
+<div class="text-center">
+    <table class="table">
+        @foreach (var item in Model.Data)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(model => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.FirstName)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.SecondName)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.Role)
+                </td>
+                <td class="d-flex justify-content-center align-items-center">
+                    <a class="btn btn-sm btn-outline-dark mr-2" asp-action="Edit" asp-route-id="@item.Id">
+                        <img src="edit.png" alt="Edit" style="max-height: 20px; max-width: 20px"/>
+                    </a>
+                    <form method="post" asp-controller="Admin" asp-action="Delete" asp-route-id="@item.Id">
+                        <button class="btn btn-sm btn-outline-dark ml-2" type="submit">
+                            <img src="delete.png" alt="Delete" style="max-height: 20px; max-width: 20px" />
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </table>
+    <div class="d-flex justify-content-center align-items-center">
+
+        @if (Model.PageIndex == 1)
+        {
+            <a class="btn btn-sm btn-dark px-2 disabled" aria-disabled="True" tabindex="-1" asp-action="Index" asp-route-pageindex="@(Model.PageIndex - 1)"> &lt; </a>
+        }
+        else
+        {
+            <a class="btn btn-sm btn-dark px-2" asp-action="Index" asp-route-pageindex="@(Model.PageIndex - 1)"> &lt; </a>
+        }
+
+        <label class="px-4 m-0">@Model.PageIndex</label>
+
+        @if (Model.PageIndex == Model.TotalPagesCount)
+        {
+            <a class="btn btn-sm btn-dark px-2 disabled" aria-disabled="True" tabindex="-1" asp-action="Index" asp-route-pageindex="@(Model.PageIndex + 1)"> > </a>
+        }
+        else
+        {
+            <a class="btn btn-sm btn-dark px-2" asp-action="Index" asp-route-pageindex="@(Model.PageIndex + 1)"> > </a>
+        }
+    </div>
+</div>

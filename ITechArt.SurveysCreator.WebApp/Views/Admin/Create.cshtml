@@ -1,4 +1,4 @@
-﻿@model ITechArt.SurveysCreator.WebApp.ViewModels.SignUpViewModel
+﻿@model ITechArt.SurveysCreator.WebApp.ViewModels.CreateUserViewModel
 
 @section Scripts
 {
@@ -6,39 +6,45 @@
 }
 
 @{
-    ViewData["Title"] = "Sign Up";
+    ViewData["Title"] = "Create User";
 }
 
 <div class="text-center">
-    <form method="post" asp-controller="Account" asp-action="SignUp">
-        <div class="pb-2">
+    <form method="post" asp-controller="Admin" asp-action="Create">
+        <div class="pb-2 form-group">
             <label asp-for="Email"></label><br />
             <input asp-for="Email" /><br />
             <span asp-validation-for="Email"></span>
         </div>
-        <div class="pb-2">
+        <div class="pb-2 form-group">
             <label asp-for="FirstName"></label><br />
             <input asp-for="FirstName" /><br />
             <span asp-validation-for="FirstName"></span>
         </div>
-        <div class="pb-2">
+        <div class="pb-2 form-group">
             <label asp-for="SecondName"></label><br />
             <input asp-for="SecondName" /><br />
             <span asp-validation-for="SecondName"></span>
         </div>
-        <div class="pb-2">
+        <div class="pb-2 form-group">
             <label asp-for="Password"></label><br />
             <input asp-for="Password" /><br />
             <span asp-validation-for="Password"></span>
         </div>
-        <div class="pb-2 mb-2">
+        <div class="pb-2 form-group">
             <label asp-for="PasswordConfirm"></label><br />
             <input asp-for="PasswordConfirm" /><br />
             <span asp-validation-for="PasswordConfirm"></span>
         </div>
-        <div class="pb-2">
-            <input class="btn btn-outline-dark" type="submit" value="Sign Up" />
+        <div class="pb-2 form-group">
+            <label asp-for="Role"></label><br />
+            @foreach (var role in Model.AllRoles)
+            {
+                <input type="radio" asp-for="Role" value="@role" />@role<br />
+            }
+            <span asp-validation-for="Role"></span>
         </div>
+        <input class="btn btn-outline-dark pb-2" type="submit" value="Create" />
         <div asp-validation-summary="ModelOnly"></div>
     </form>
 </div>

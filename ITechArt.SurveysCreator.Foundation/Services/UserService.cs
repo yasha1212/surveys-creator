@@ -1,74 +1,170 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using ITechArt.SurveysCreator.DAL;
 using ITechArt.SurveysCreator.DAL.Models;
+using ITechArt.SurveysCreator.Foundation.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace ITechArt.SurveysCreator.Foundation.Services
 {
     public class UserService : IUserService
     {
-        private readonly SurveysCreatorDbContext _context;
+        private const int UsersPageSize = 10;
 
-        public UserService(SurveysCreatorDbContext context)
+        private readonly SurveysCreatorDbContext _context;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
+
+        public UserService(SurveysCreatorDbContext context, UserManager<User> userManager,
+            SignInManager<User> signInManager)
         {
             _context = context;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
 
-        public void Add(User item)
+        public async Task<IdentityResult> SignUpAsync(User user, string password)
         {
-            if (!_context.Users.Any(u => u.Id == item.Id))
-            {
-                _context.Users.Add(item);
-                _context.SaveChanges();
-            }
-            else
-            {
-                throw new Exception("Invalid add operation, because current item exists!");
-            }
+            return await CreateAsync(user, password, "user");
         }
 
-        public User Details(int id)
+        public async Task<SignInResult> SignInAsync(string email, string password)
         {
-            return _context.Users.Find(id);
+            return await _signInManager.PasswordSignInAsync(email, password, false, false);
         }
 
-        public IEnumerable<User> Get()
+        public async Task SignOutAsync()
         {
-            return _context.Users.AsEnumerable();
+            await _signInManager.SignOutAsync();
         }
 
-        public void Edit(int id, User item)
+        public async Task<bool> ContainsByEmailAsync(string email)
         {
-            var user = _context.Users.Find(id);
-
-            if (user != null)
-            {
-                user.Email = item.Email;
-                user.FirstName = item.FirstName;
-                user.SecondName = item.SecondName;
-                
-                _context.SaveChanges();
-            }
-            else
-            {
-                throw new Exception("Invalid edit operation, because current item does not exist!");
-            }
+            return await _context.Users
+                .Select(u => u.NormalizedEmail)
+                .ContainsAsync(email.ToUpper());
         }
 
-        public void Delete(int id)
+        public async Task<bool> ContainsByIdAsync(string id)
         {
-            var user = _context.Users.Find(id);
+            return await _context.Users
+                .Select(u => u.Id)
+                .ContainsAsync(id);
+        }
 
-            if (user != null)
+        public async Task<PagedResponse<UserInfo>> GetUsersInfoAsync(int pageIndex)
+        {
+            var usersCount = await _context.Users.CountAsync();
+
+            var pagesCount = (int) Math.Ceiling((double) usersCount / (double) UsersPageSize);
+
+            pageIndex = pageIndex <= (pagesCount) && (pageIndex >= 1) ? pageIndex : 1;
+
+            var users =  await _context.Users
+                .SelectMany(u => _context.UserRoles.Where(ur => ur.UserId == u.Id),
+                    (u, ur) => new
+                    {
+                        u.Id,
+                        u.Email,
+                        u.FirstName,
+                        u.SecondName,
+                        ur.RoleId
+                    })
+                .SelectMany(x => _context.Roles.Where(r => r.Id == x.RoleId),
+                    (x, r) => new UserInfo
+                    {
+                        Id = x.Id,
+                        Email = x.Email,
+                        FirstName = x.FirstName,
+                        SecondName = x.SecondName,
+                        Role = r.Name
+                    })
+                .Skip((pageIndex - 1) * UsersPageSize)
+                .Take(UsersPageSize)
+                .ToListAsync();
+
+            return new PagedResponse<UserInfo>
             {
-                _context.Users.Remove(user);
-                _context.SaveChanges();
-            }
-            else
+                Data = users,
+                PageIndex = pageIndex,
+                PageSize = UsersPageSize,
+                TotalPagesCount = pagesCount
+            };
+        }
+
+        public async Task<UserInfo> GetUserInfoAsync(string id)
+        {
+            return await _context.Users
+                .Where(u => u.Id == id)
+                .SelectMany(u => _context.UserRoles.Where(ur => ur.UserId == u.Id).DefaultIfEmpty(),
+                    (u, ur) => new
+                    {
+                        u.Id,
+                        u.Email,
+                        u.FirstName,
+                        u.SecondName,
+                        ur.RoleId
+                    })
+                .SelectMany(x => _context.Roles.Where(r => r.Id == x.RoleId).DefaultIfEmpty(),
+                    (x, r) => new UserInfo
+                    {
+                        Id = x.Id,
+                        Email = x.Email,
+                        FirstName = x.FirstName,
+                        SecondName = x.SecondName,
+                        Role = r.Name
+                    })
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<List<string>> GetRolesAsync()
+        {
+            return await _context.Roles
+                .Select(r => r.Name)
+                .ToListAsync();
+        }
+
+        public async Task<IdentityResult> EditAsync(UserInfo userInfo, string password)
+        {
+            var user = await _context.Users.FindAsync(userInfo.Id);
+
+            var userRoles = await _userManager.GetRolesAsync(user);
+
+            await _userManager.RemoveFromRolesAsync(user, userRoles);
+            await _userManager.AddToRoleAsync(user, userInfo.Role);
+
+            user.Email = userInfo.Email;
+            user.FirstName = userInfo.FirstName;
+            user.SecondName = userInfo.SecondName;
+
+            if (password != null)
             {
-                throw new Exception("Invalid delete operation, because current item does not exist!");
+                user.PasswordHash = _userManager.PasswordHasher.HashPassword(user, password);
             }
+
+            return await _userManager.UpdateAsync(user);
+        }
+
+        public async Task DeleteAsync(string id)
+        {
+            var user = await _context.Users.FindAsync(id);
+
+            await _userManager.DeleteAsync(user);
+        }
+
+        public async Task<IdentityResult> CreateAsync(User user, string password, string role)
+        {
+            var result = await _userManager.CreateAsync(user, password);
+
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(user, role);
+            }
+
+            return result;
         }
     }
 }

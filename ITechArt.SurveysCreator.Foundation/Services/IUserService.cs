@@ -18,9 +18,7 @@ namespace ITechArt.SurveysCreator.Foundation.Services
 
         Task<bool> ContainsByIdAsync(string id);
 
-        Task<IEnumerable<UserInfo>> GetUsersInfoAsync(PagesInfo pagesInfo);
-
-        Task<int> GetUserPagesCountAsync(int pageSize);
+        Task<PagedResponse<UserInfo>> GetUsersInfoAsync(int pageIndex);
 
         Task<UserInfo> GetUserInfoAsync(string id);
 

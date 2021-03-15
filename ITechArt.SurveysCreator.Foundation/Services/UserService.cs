@@ -12,6 +12,8 @@ namespace ITechArt.SurveysCreator.Foundation.Services
 {
     public class UserService : IUserService
     {
+        private const int UsersPageSize = 10;
+
         private readonly SurveysCreatorDbContext _context;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
@@ -53,9 +55,15 @@ namespace ITechArt.SurveysCreator.Foundation.Services
                 .ContainsAsync(id);
         }
 
-        public async Task<IEnumerable<UserInfo>> GetUsersInfoAsync(PagesInfo pagesInfo)
+        public async Task<PagedResponse<UserInfo>> GetUsersInfoAsync(int pageIndex)
         {
-            return await _context.Users
+            var usersCount = await _context.Users.CountAsync();
+
+            var pagesCount = (int) Math.Ceiling((double) usersCount / (double) UsersPageSize);
+
+            pageIndex = pageIndex <= (pagesCount) && (pageIndex >= 1) ? pageIndex : 1;
+
+            var users =  await _context.Users
                 .SelectMany(u => _context.UserRoles.Where(ur => ur.UserId == u.Id),
                     (u, ur) => new
                     {
@@ -74,37 +82,17 @@ namespace ITechArt.SurveysCreator.Foundation.Services
                         SecondName = x.SecondName,
                         Role = r.Name
                     })
-                .Skip((pagesInfo.PageNumber - 1) * pagesInfo.PageSize)
-                .Take(pagesInfo.PageSize)
+                .Skip((pageIndex - 1) * UsersPageSize)
+                .Take(UsersPageSize)
                 .ToListAsync();
-        }
 
-        public async Task<int> GetUserPagesCountAsync(int pageSize)
-        {
-            var usersCount = await _context.Users
-                .SelectMany(u => _context.UserRoles.Where(ur => ur.UserId == u.Id),
-                    (u, ur) => new
-                    {
-                        u.Id,
-                        u.Email,
-                        u.FirstName,
-                        u.SecondName,
-                        ur.RoleId
-                    })
-                .SelectMany(x => _context.Roles.Where(r => r.Id == x.RoleId),
-                    (x, r) => new UserInfo
-                    {
-                        Id = x.Id,
-                        Email = x.Email,
-                        FirstName = x.FirstName,
-                        SecondName = x.SecondName,
-                        Role = r.Name
-                    })
-                .CountAsync();
-
-            var result = (double)usersCount / (double)pageSize;
-
-            return (int)Math.Ceiling(result);
+            return new PagedResponse<UserInfo>
+            {
+                Data = users,
+                PageIndex = pageIndex,
+                PageSize = UsersPageSize,
+                TotalPagesCount = pagesCount
+            };
         }
 
         public async Task<UserInfo> GetUserInfoAsync(string id)

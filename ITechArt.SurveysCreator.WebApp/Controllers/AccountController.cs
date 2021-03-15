@@ -96,9 +96,9 @@ namespace ITechArt.SurveysCreator.WebApp.Controllers
         }
 
         [HttpPost]
-        public JsonResult IsUnique(string email)
+        public async Task<JsonResult> IsUnique(string email)
         {
-            if (_userService.ContainsByEmail(email))
+            if (await _userService.ContainsByEmailAsync(email))
             {
                 return Json(false);
             }

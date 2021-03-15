@@ -1,4 +1,4 @@
-﻿@model ITechArt.SurveysCreator.WebApp.ViewModels.UsersPagesViewModel
+﻿@model ITechArt.SurveysCreator.Foundation.Models.PagedResponse<ITechArt.SurveysCreator.Foundation.Models.UserInfo>
 
 @{
     ViewData["Title"] = "Users List";
@@ -9,7 +9,7 @@
 <a class="btn btn-dark mb-4" asp-action="Create">Create</a>
 <div class="text-center">
     <table class="table">
-        @foreach (var item in Model.UsersInfo)
+        @foreach (var item in Model.Data)
         {
             <tr>
                 <td>
@@ -39,24 +39,24 @@
     </table>
     <div class="d-flex justify-content-center align-items-center">
 
-        @if (Model.PagesInfo.PageNumber == 1)
+        @if (Model.PageIndex == 1)
         {
-            <a class="btn btn-sm btn-dark px-2 disabled" aria-disabled="True" tabindex="-1" asp-action="Index" asp-route-pagenumber="@(Model.PagesInfo.PageNumber - 1)"> &lt; </a>
+            <a class="btn btn-sm btn-dark px-2 disabled" aria-disabled="True" tabindex="-1" asp-action="Index" asp-route-pageindex="@(Model.PageIndex - 1)"> &lt; </a>
         }
         else
         {
-    <a class="btn btn-sm btn-dark px-2" asp-action="Index" asp-route-pagenumber="@(Model.PagesInfo.PageNumber - 1)"> &lt; </a>
+            <a class="btn btn-sm btn-dark px-2" asp-action="Index" asp-route-pageindex="@(Model.PageIndex - 1)"> &lt; </a>
         }
 
-        <label class="px-4 m-0">@Model.PagesInfo.PageNumber</label>
+        <label class="px-4 m-0">@Model.PageIndex</label>
 
-        @if (Model.PagesInfo.PageNumber == Model.PagesInfo.TotalPagesCount)
+        @if (Model.PageIndex == Model.TotalPagesCount)
         {
-            <a class="btn btn-sm btn-dark px-2 disabled" aria-disabled="True" tabindex="-1" asp-action="Index" asp-route-pagenumber="@(Model.PagesInfo.PageNumber + 1)"> > </a>
+            <a class="btn btn-sm btn-dark px-2 disabled" aria-disabled="True" tabindex="-1" asp-action="Index" asp-route-pageindex="@(Model.PageIndex + 1)"> > </a>
         }
         else
         {
-            <a class="btn btn-sm btn-dark px-2" asp-action="Index" asp-route-pagenumber="@(Model.PagesInfo.PageNumber + 1)"> > </a>
+            <a class="btn btn-sm btn-dark px-2" asp-action="Index" asp-route-pageindex="@(Model.PageIndex + 1)"> > </a>
         }
     </div>
 </div>
